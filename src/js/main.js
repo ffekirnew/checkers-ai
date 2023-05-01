@@ -35,6 +35,7 @@ function drawBoard() {
     }
 }
 
+// Checker if a row and column is in bound on the game board
 function inBound(row, col) {
     let rowInBound = (0 <= row && row < 8);
     let colInBound = (0 <= col && col < 8);
@@ -42,6 +43,7 @@ function inBound(row, col) {
     return rowInBound && colInBound;
 }
 
+// Generate the next places to move to for selected pieces
 function generateNextPlaces(piece, row, col) {
     let nextCells = [];
     if (piece) {
@@ -101,7 +103,6 @@ function generateNextPlaces(piece, row, col) {
 }
 
 // Select a piece to move
-let selectedPiece = null;
 function selectPiece(piece, row, col) {
     const errorElement = document.getElementById('error');
     if (piece && piece.color == turn) {
@@ -127,6 +128,7 @@ function selectPiece(piece, row, col) {
     }
 }
 
+// Move a piece
 function movePiece(from, to) {
     let distance = Math.abs(from.x - to.x);
     if (distance > 1) {
@@ -137,9 +139,9 @@ function movePiece(from, to) {
 
     turn = (turn == 'white') ? 'black' : 'white';
 
-    console.log(humanScoreElement);
-    humanScoreElement.innerHTML = 12 - board.whiteScore;
-    computerScoreElement.innerHTML = 12 - board.blackScore;
+    console.log(humanScoreElement)
+    humanScoreElement.innerHTML = 12 - board.blackScore;
+    computerScoreElement.innerHTML = 12 - board.whiteScore;
 }
 
 // Draw the initial game board

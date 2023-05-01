@@ -5,23 +5,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="./src/js/checkers.js"></script>
+    <script type="module" defer src="./src/js/main.js"></script>
     <link rel="stylesheet" href="./src/style/style.css">
-    <title>Checkers</title>
+    <title>Checkers AI</title>
 </head>
 
 <body>
     <header>
         <h1>Checkers</h1>
-        <p>vs Computer</p>
+        <p>vs Computer</p> <!-- Placeholder for an option later -->
     </header>
-    <main>
+    <main>e
+        <!-- The Playing Board -->
         <div id="board" class="board"></div>
-        <h2>Scores</h2>
-        <p>You: <span id="humanScore">0</span> | Computer: <span id="computerScore">0</span></p>
-    </main>
 
-    <div id="error"></div>
+        <!-- The Score Board -->
+        <div class="scores">
+            <h2>Scores</h2>
+            <p>You: <span id="humanScore">0</span> | Computer: <span id="computerScore">0</span></p>
+        </div>
+
+        <!-- Place for playing errors -->
+        <div class="errors">
+            <p id="error"></p>
+        </div>
+    </main>
 </body>
 
 </html>
