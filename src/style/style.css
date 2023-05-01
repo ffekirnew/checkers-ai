@@ -54,11 +54,17 @@ header {
 
 main {
     text-align: center;
+    margin: 2rem auto;
 }
 
-#error {
+.errors {
     color: #d41d20;
     text-align: center;
     padding: 10px;
+}
+
+#algorithm-chooser {
+    margin: 0.5rem auto;
+    font-size: 1.2rem;
 }
 

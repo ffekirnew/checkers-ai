@@ -13,9 +13,16 @@
 <body>
     <header>
         <h1>Checkers</h1>
-        <p>vs Computer</p> <!-- Placeholder for an option later -->
+        <form action="get">
+            <label for="algorithm-chooser">Vs: </label>
+            <select name="algorithmChooser" id="algorithm-chooser">
+                <option value="minimax" default>Minimax</option>
+                <option value="minimax">Alpha-Beta Pruning</option>
+                <option value="minimax">MCTS</option>
+            </select>
+        </form> <!-- Placeholder for an option later -->
     </header>
-    <main>e
+    <main>
         <!-- The Playing Board -->
         <div id="board" class="board"></div>
 

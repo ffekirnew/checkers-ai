@@ -1,10 +1,12 @@
 import CheckerBoard from "./board.js";
+import MiniMax from "./minimax.js";
 
 // Create a new CheckerBoard instance
 const board = new CheckerBoard();
+const minimax = new MiniMax();
 
 // Set up the game board UI
-function drawBoard() {
+export function drawBoard() {
     const boardElement = document.getElementById('board');
 
     // Clear the board
@@ -36,7 +38,7 @@ function drawBoard() {
 }
 
 // Checker if a row and column is in bound on the game board
-function inBound(row, col) {
+export function inBound(row, col) {
     let rowInBound = (0 <= row && row < 8);
     let colInBound = (0 <= col && col < 8);
 
@@ -44,7 +46,7 @@ function inBound(row, col) {
 }
 
 // Generate the next places to move to for selected pieces
-function generateNextPlaces(piece, row, col) {
+export function generateNextPlaces(piece, row, col) {
     let nextCells = [];
     if (piece) {
         if (piece.color == 'white' || piece.isKing) {
@@ -103,22 +105,24 @@ function generateNextPlaces(piece, row, col) {
 }
 
 // Select a piece to move
-function selectPiece(piece, row, col) {
+export function selectPiece(piece, row, col) {
     const errorElement = document.getElementById('error');
     if (piece && piece.color == turn) {
         let nextCells = generateNextPlaces(piece, row, col);
         const squares = document.getElementsByClassName('square');
-        
+
         for (let i = 0; i < 64; i++) {
             squares[i].classList.remove('green');
+            // squares[i].removeEventListener('click');
         }
 
         for (let i = 0; i < nextCells.length; i++) {
             let location = (nextCells[i][0] * 8) + nextCells[i][1];
-            
+
             squares[location].classList.toggle('green');
             squares[location].addEventListener('click', () => {
-                movePiece({x: col, y: row}, {x: nextCells[i][1], y: nextCells[i][0]});
+            movePiece(board, { x: col, y: row }, { x: nextCells[i][1], y: nextCells[i][0] });
+            aiMove();
             });
         }
 
@@ -129,17 +133,26 @@ function selectPiece(piece, row, col) {
 }
 
 // Move a piece
-function movePiece(from, to) {
+function movePiece(board, from, to) {
     let distance = Math.abs(from.x - to.x);
     if (distance > 1) {
         board.takePiece((from.y + to.y) / 2, (from.x + to.x) / 2)
     }
     board.movePiece(from, to);
     drawBoard();
+}
 
-    turn = (turn == 'white') ? 'black' : 'white';
+function aiMove() {
+    console.log("here");
+    const { aiPiece, row, col } = minimax.getBestMove(board, true, 'black');
 
-    console.log(humanScoreElement)
+    from = aiPiece.position;
+    to = { y: row, x: col };
+
+    movePiece(aiPiece, from, to);
+
+    drawBoard();
+
     humanScoreElement.innerHTML = 12 - board.blackScore;
     computerScoreElement.innerHTML = 12 - board.whiteScore;
 }
