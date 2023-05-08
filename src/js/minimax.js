@@ -12,16 +12,21 @@ class MiniMax {
             return [null, null, null, 1];
 
         if (board.blackScore == 0)
-            return [null, -1]
+            return [null, null, null, -1]
+
+        if (board.blackScore == 1 && board.whiteScore == 1)
+            return [null, null, null, 0]
+
+        let newBoard = {...board};
 
         if (maximizingPlayer)
-            return this.maximize(board, 'black');
+            return this.maximize(newBoard);
 
-        return this.minimize(board, 'white');
+        return this.minimize(newBoard);
     }
 
     // TODO: implement minimizer function
-    minimize(board, turn) {
+    minimize(board) {
         let bestPiece;
         let bestRow;
         let bestCol;
@@ -41,14 +46,16 @@ class MiniMax {
             const nextCells = generateNextPlaces(whitePieces[i][0], whitePieces[i][1], whitePieces[i][2]);
 
             for (let j = 0; j < nextCells.length; j++) {
-                let new_board = { ...board };
+                let newBoard = { ...board };
 
-                let from = { y: whitePieces[i][0], x: whitePieces[i][1] };
+                let from = { y: whitePieces[i][1], x: whitePieces[i][2] };
                 let to = { y: nextCells[j][0], x: nextCells[j][1] };
 
-                movePiece(new_board, from, to);
+                console.log(newBoard);
+                movePiece(newBoard, from, to);
+                console.log(newBoard);
 
-                let score = this.getBestMove(new_board, true, 'black')[3];
+                let score = this.getBestMove(newBoard, true, 'black')[3];
                 if (score <= minVal) {
                     bestPiece = whitePieces[i][0];
                     bestRow = whitePieces[i][1];
@@ -63,7 +70,7 @@ class MiniMax {
     }
 
     // TODO: implement maximizer function
-    maximize(board, turn) {
+    maximize(board) {
         let bestPiece;
         let bestRow;
         let bestCol;
@@ -82,38 +89,49 @@ class MiniMax {
         for (let i = 0; i < blackPieces.length; i++) {
             const nextCells = generateNextPlaces(blackPieces[i][0], blackPieces[i][1], blackPieces[i][2]);
 
-
             for (let j = 0; j < nextCells.length; j++) {
-                let new_board = { ...board };
+                let newBoard = { ...board };
 
                 let from = { y: blackPieces[i][1], x: blackPieces[i][2] };
                 let to = { y: nextCells[j][0], x: nextCells[j][1] };
 
-                movePiece(new_board, from, to);
+                movePiece(newBoard, from, to);
 
-                let score = this.getBestMove(new_board, false, 'white')[3];
+                let score = this.getBestMove(newBoard, false, 'white')[3];
                 if (score >= maxVal) {
                     bestPiece = blackPieces[i][0];
                     bestRow = blackPieces[i][1];
                     bestCol = blackPieces[i][2];
-                    minVal = score;
+                    maxVal = score;
                 }
             }
-
         }
-        return [bestPiece, bestRow, bestCol, minVal];
+        return [bestPiece, bestRow, bestCol, maxVal];
 
     }
 }
 
 function movePiece(board, from, to) {
     let distance = Math.abs(from.x - to.x);
+    let piece = board.board[from.y][from.x];
+
     if (distance > 1) {
+        let takenPiece = board.board[(from.y + to.y) / 2][(from.x + to.x) / 2];
+        if (takenPiece) {
+            if (takenPiece.color == 'white') {
+                board.whiteScore -= 1;
+            } else {
+                board.blackScore -= 1;
+            }
+        }
         board.board[(from.y + to.y) / 2][(from.x + to.x) / 2] = null;
     }
-    board.board[to.y][to.x] = board.board[from.y][from.x];
-    board.board[from.y][from.x].move(to); //  .movePiece(from, to);
-    board.board[from.y][from.x] = null; //  .movePiece(from, to);
+
+    if (piece) {
+        board.board[to.y][to.x] = piece;
+        piece.move(to); //  .movePiece(from, to);
+        board.board[from.y][from.x] = null; //  .movePiece(from, to);
+    }
 
 }
 

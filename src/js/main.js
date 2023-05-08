@@ -143,12 +143,16 @@ function movePiece(board, from, to) {
 }
 
 function aiMove() {
-    console.log("here");
     const { aiPiece, row, col } = minimax.getBestMove(board, true, 'black');
+
+    if (!aiPiece || !row | !col) {
+        return;
+    }
 
     from = aiPiece.position;
     to = { y: row, x: col };
 
+    console.log(aiPiece, from, to);
     movePiece(aiPiece, from, to);
 
     drawBoard();
